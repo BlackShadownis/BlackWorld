@@ -1,59 +1,52 @@
-import requests
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
-import time
 
 def get_anime_list(anime_name):
-    print(f"🟢 Iniciando búsqueda para: {anime_name}")
-
+    # Configuración rápida
     options = Options()
-    options.headless = True
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
 
-    base_url = f'https://www3.animeflv.net/browse?q={anime_name}'
-    print(f"🌐 Navegando a: {base_url}")
-    driver.get(base_url)
-
-    time.sleep(3)
-
     try:
-        anime_link = driver.find_element(By.CSS_SELECTOR, ".Anime a")
+        # Búsqueda
+        driver.get(f'https://www3.animeflv.net/browse?q={anime_name}')
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, ".ListAnimes li"))
+        )
+        
+        # Extrae primer resultado
+        anime = driver.find_element(By.CSS_SELECTOR, ".ListAnimes li:first-child")
+        anime_link = anime.find_element(By.TAG_NAME, "a")
+        anime_data = {
+            "name": anime_link.get_attribute("title"),
+            "link": anime_link.get_attribute("href"),
+            "image": anime.find_element(By.TAG_NAME, "img").get_attribute("src")
+        }
 
-        anime_title = anime_link.text
-        anime_href = anime_link.get_attribute('href')
-        driver.get(anime_href)
-        time.sleep(20)
+        # Extrae episodios (página de detalles)
+        driver.get(anime_data["link"])
+        episodes = WebDriverWait(driver, 10).until(
+            EC.presence_of_all_elements_located((By.CSS_SELECTOR, "#episodeList li a"))
+        )
+        anime_data["episodes"] = [
+            {
+                "episode_number": ep.text.split()[-1],
+                "episode_name": ep.text,
+                "episode_link": ep.get_attribute("href")
+            } for ep in episodes
+        ]
+
+        return [anime_data]
+
     except Exception as e:
-        print(f"❌ Error encontrando el anime: {e}")
-        driver.quit()
+        print(f"Error durante el scraping: {e}")
         return []
-
-    episodes = []
-    try:
-        episode_blocks = driver.find_elements(By.CSS_SELECTOR, "#episodeList li")
-        for block in episode_blocks:
-            a_tag = block.find_element(By.TAG_NAME, 'a')
-            href = a_tag.get_attribute('href')
-            ep_text = a_tag.text.strip()
-            ep_num = int(ep_text.split()[-1]) if ep_text.split()[-1].isdigit() else None
-
-            episodes.append({
-                "episode_number": ep_num,
-                "episode_name": ep_text,
-                "episode_link": href
-            })
-    except Exception as e:
-        print(f"⚠️ Error leyendo episodios: {e}")
-
-    driver.quit()
-
-    print(f"✅ Devuelto {len(episodes)} episodios.")
-    return [{
-        "name": anime_title,
-        "link": anime_href,
-        "episodes": episodes
-    }]
+    finally:
+        driver.quit()

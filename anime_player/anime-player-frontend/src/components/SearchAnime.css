@@ -1,0 +1,131 @@
+/* Variables */
+:root {
+  --primary-color: #e63946;
+  --dark-bg: #1a1a1a;
+  --card-bg: #2d2d2d;
+  --text-light: #f8f9fa;
+}
+
+/* Contenedor Principal */
+.search-anime-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--dark-bg);
+  color: var(--text-light);
+}
+
+/* Barra de Búsqueda */
+.search-box {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid var(--primary-color);
+  border-radius: 6px;
+  background-color: var(--card-bg);
+  color: var(--text-light);
+}
+
+.search-button {
+  padding: 12px 24px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-button:hover {
+  background-color: #c1121f;
+}
+
+/* Resultados */
+.anime-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+/* Tarjeta de Anime */
+.anime-card {
+  background-color: var(--card-bg);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.anime-card:hover {
+  transform: translateY(-5px);
+}
+
+.anime-image {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+}
+
+.anime-info {
+  padding: 20px;
+}
+
+.anime-info h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.watch-link {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  margin-bottom: 15px;
+}
+
+/* Lista de Episodios */
+.episodes-container {
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.episodes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.episode-item {
+  margin-bottom: 10px;
+}
+
+.episode-link {
+  display: block;
+  padding: 8px 12px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  color: var(--text-light);
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.episode-link:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Estados */
+.loader,
+.no-results {
+  text-align: center;
+  padding: 30px;
+  color: var(--primary-color);
+  font-size: 1.2rem;
+}
