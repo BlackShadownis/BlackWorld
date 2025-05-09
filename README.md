@@ -17,6 +17,7 @@ Aplicación web para buscar y ver animes, desarrollada con React y Django.
 ```bash
 cd frotned
 npm install
+```
 
 ### Backend
 
