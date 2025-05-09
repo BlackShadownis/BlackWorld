@@ -8,6 +8,19 @@ Aplicación web para buscar y ver animes, desarrollada con React y Django.
 - **Backend:** Django
 - **Scraping:** Selenium
 
+
+## 🛠️ Requisitos
+
+Antes de clonar el proyecto, asegúrate de tener instalado:
+
+- **Python 3.x**
+- **pip**
+- **Node.js** y **npm**
+- **Google Chrome**
+- [**ChromeDriver**](https://sites.google.com/a/chromium.org/chromedriver/) (versión compatible con tu navegador)
+
+---
+
 ## 📦 Instalación
 
 
